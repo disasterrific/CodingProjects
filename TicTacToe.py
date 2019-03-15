@@ -10,11 +10,11 @@ clear_board
 
 def display_board(board):
     
-    print(board[7]+' |',board[8]+' | '+board[9])
+    print(' '+board[7]+' |',board[8]+' | '+board[9])
     print('---------')
-    print(board[4]+' |',board[5]+' | '+board[6])
+    print(' '+board[4]+' |',board[5]+' | '+board[6])
     print('---------')
-    print(board[1]+' |',board[2]+' | '+board[3])
+    print(' '+board[1]+' |',board[2]+' | '+board[3])
 
 #%%
 # Step 2: Function to ask players for marker (X or O)
@@ -192,3 +192,6 @@ def play_TicTacToe():
             game_on = True
         else:            
             break
+
+#%%
+play_TicTacToe()
