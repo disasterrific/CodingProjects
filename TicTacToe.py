@@ -1,7 +1,7 @@
 #%%
 #Step 1: Function to display the board
 
-from IPython.display import clear_output
+#from IPython.display import clear_output
 clear_board = '\n*100'
 clear_board
     
@@ -16,74 +16,56 @@ def display_board(board):
     print('---------')
     print(board[1]+' |',board[2]+' | '+board[3])
 
-# test if board displaying works
-
-test_board = ['#','1','2','3','4','5','6','7','8','9']
-
-display_board(test_board)
-
 #%%
 # Step 2: Function to ask players for marker (X or O)
 
 def player_input():
     '''
-    OUTPUT = {'Player 1': Player 1 marker, 'Player 2': Player 2 marker}
+    OUTPUT = (player1_marker, player2_marker)
     '''
-    print('Hello, this is Tic Tac Toe.')
     
     marker = ''
     
-    while marker != 'X' and marker != 'O':
+    while not (marker == 'X' or marker == 'O'):
         marker = input('Player 1, choose X or O: ').upper()
      
     if marker == 'X':
-        return markers = {'Player 1': 'X','Player 2': 'O'}
+        return ('X','O')
     
     else:
-        return markers = {'Player 1': 'O', 'Player 2': 'X'}
+        return ('O','X')
         
     
-#%%  
-#test
-player_input()
-return tuple(markers.values())
+#%% test
+
+#(player1_marker, player2_marker) = player_input()
+#player1_marker
+#player2_marker
+# for dict instead of tuple return: return tuple(player_input().values())
 
 #%%
 # Step 3: Function to position marker on board
 
 def place_marker(board, marker, position):
-    int(input(print(f'{choose_first()} begins! Press the corresponding number on your num pad to set your marker on the Tic Tac Toe Board:')))
     board[position] = marker
-
-#%%
-#test
-place_marker(test_board, 'T', 4)
-display_board(test_board)
 
 #%%
 # Step 4: Function to take in marker input and test if a player has won
 def win_check(board,marker):
     
-    if ((board[1] == marker and board[2] == marker and board[3] == marker) or 
+    return ((board[1] == marker and board[2] == marker and board[3] == marker) or 
     (board[4] == marker and board[5] == marker and board[6] == marker) or
     (board[7] == marker and board[8] == marker and board[9] == marker) or
     (board[1] == marker and board[4] == marker and board[7] == marker) or
     (board[2] == marker and board[5] == marker and board[8] == marker) or
     (board[3] == marker and board[6] == marker and board[9] == marker) or
     (board[1] == marker and board[5] == marker and board[9] == marker) or
-    (board[7] == marker and board[5] == marker and board[3] == marker)):
+    (board[7] == marker and board[5] == marker and board[3] == marker))
         
         #alternative:
         #str = ''
         #str.join(board[4,5,6]) == marker*3
         #str.join(board[7,8,9]) == marker*3
-        
-        print(f'Congratulations! {markers.key('marker')} wins!')
-        break
-
-#%%
-#test
-win_check(test_board,'T')
 
 #%%
 # Step 5: Function to pick player that starts
@@ -125,164 +107,88 @@ def player_choice(board):
         
     return position
 
-#%%    
-#test
-player_choice(test_board)
-
 #%%
 # Step 9: Ask for replay
 
 def replay():
     
-    return input('Do you want to play again? [yes/no]').lower().startswith('y')
+    choice = input('Do you want to play again? [yes/no]').lower().startswith('y')
+
+    return choice == 'y'
 
 #%%
 # Step 10: Put functions together to run the game 
 
-def play_TicTacToe()
+def play_TicTacToe():
     
-    empty_board = ['#','','','','','','','','','']
-    # Step 7
-    while game_ongoing == True:
-         # Step1   
-         display_board(empty_board)
-         # Step 2
-         player_input()
-         # Step 5
-         print(f'{choose_first()} begins! Choose your position: ')
-         # Step 3   
-         place_marker(empty_board, marker, position)
-         # Steps 8 and 6
-         player_choice(empty_board)         
-         # Step 4
-         if win_check(empty_board,marker):
+    print('Hello, this is Tic Tac Toe.')
+    
+    while True:
 
-    else:
-        # Step 7
-        if full_board_check(board):
-             print("It's a tie!") 
-
-    # Step 9
-    if replay() == 'y':
-        clear_board
+        # SET UP GAME
+        empty_board = ['']*10
         
+        (player1_marker, player2_marker) = player_input()
 
+        turn = choose_first()
+        print(f'{turn} begins! ')
 
+        play_game = input('Ready to play? [y/n] ')
 
-
-
-
-
-
-
+        if play_game == 'y':
+            game_on = True
+        else:
+            game_on = False
          
+         ## GAME PLAY
+        while game_on == True:
+            ### PLAYER 1 TURN
+            if turn == 'Player 1':
+                display_board(empty_board)
+                
+                position = player_choice(empty_board)
 
+                place_marker(empty_board, player1_marker, position)
 
+                if win_check(empty_board,player1_marker):
+                    display_board(empty_board)
+                    print(f'Congratulations! Player 1 wins!')
+                    game_on == False #same as break
 
+                else:
+                    if full_board_check(empty_board):
+                        display_board(empty_board)
+                        print("It's a tie!") 
+                        game_on == False #same as break
 
+                    else:
+                        turn = 'Player 2'
 
+            ### PLAYER 2 TURN
+            else:
+                display_board(empty_board)
+                
+                position = player_choice(empty_board)
 
+                place_marker(empty_board, player2_marker, position)
 
+                if win_check(empty_board,player2_marker):
+                    display_board(empty_board)
+                    print(f'Congratulations! Player 2 wins!')
+                    game_on == False #same as break
 
-#%%
+                else:
+                    if full_board_check(empty_board):
+                        display_board(empty_board)
+                        print("It's a tie!") 
+                        game_on == False #same as break
 
+                    else:
+                        turn = 'Player 1'
 
-
-#%%
-
-
-
-#%%
-
-
-
-#%%
-
-
-
-#%%
-
-
-
-#%%
-
-
-
-#%%
-
-
-
-#%%
-board = ['#',''*9]
-
-while board[position] == ' ' #len(test_board) < 11:
-    
-    player1_input = int(input('Press the corresponding number on your num pad to set your marker on the Tic Tac Toe Board (see board image below):'))
-    player2_input = int(input('Press the corresponding number on your num pad to set your marker on the Tic Tac Toe Board (see board image below):'))        
-    display_board(test_board)
-    
-    
-    if board[player1_input] != ''
-        
-        board[player1_input] = player1_marker
-        '\n*100'
-        display_board(board)
-        continue
-     
-    if board[player2_input] != ''
-    
-        board[player2_input] = player2_marker
-        '\n*100'
-        display_board(board)
-        continue
-    
-    # check if a player has won
-    
-    if board[1] = board[2] == board[3] == marker or 
-    board[4] = board[5] == board[6] == marker or
-    board[7] = board[8] == board[9] == marker or
-    board[1] = board[4] == board[7] == marker or
-    board[2] = board[5] == board[8] == marker or
-    board[3] = board[6] == board[9] == marker or
-    board[1] = board[5] == board[9] == marker or
-    board[7] = board[5] == board[3] == marker:
-        
-        #alternative:
-        #str = ''
-        #str.join(board[4,5,6]) == player1_marker*3
-        #str.join(board[7,8,9]) == player1_marker*3
-        
-        print(f'Congratulations! {}Player1 wins!')
-        break
-        
-    if board[1] = board[2] == board[3] == player2_marker or 
-    board[4] = board[5] == board[6] == player2_marker or
-    board[7] = board[8] == board[9] == player2_marker or
-    board[1] = board[4] == board[7] == player2_marker or
-    board[2] = board[5] == board[8] == player2_marker or
-    board[3] = board[6] == board[9] == player2_marker or
-    board[1] = board[5] == board[9] == player2_marker or
-    board[7] = board[5] == board[3] == player2_marker:
-        
-        print('Congratulations! Player2 wins!')
-        break
-        
-        
-        rerun = ''
-        
-        while rerun != 'yes' and rerun != 'no':
-            input('Do you want to play again? [yes/no]')
-            
-            if rerun = 'yes':
-                continue
-            if rerun = 'no':
-                clear_output
-                break
-            
-            
-            
-        
-        
-        
-
-
+        if replay():
+            clear_board = '\n*100'
+            clear_board
+            game_on = True
+        else:            
+            break
