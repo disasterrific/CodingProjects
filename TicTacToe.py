@@ -1,25 +1,28 @@
+
 #%%
 #Step 1: Function to display the board
 
-#from IPython.display import clear_output
-clear_board = '\n*100'
-clear_board
+from IPython.display import clear_output
+#clear_board = '\n'*100
+#clear_board
     
-    # '\n*100' clears board. In jupyter notebook,
-    #the method clear_board() does the same
+    # '\n'*100 scrolls previous board up out of view; in jupyter notebook,
+    #the method clear_output() has the same effect
 
 def display_board(board):
     
-    print(' '+board[7]+' |',board[8]+' | '+board[9])
-    print('---------')
-    print(' '+board[4]+' |',board[5]+' | '+board[6])
-    print('---------')
-    print(' '+board[1]+' |',board[2]+' | '+board[3])
+    clear_output()
+    
+    print(' '+board[7]+' | '+board[8]+' | '+board[9])
+    print('-----------')
+    print(' '+board[4]+' | '+board[5]+' | '+board[6])
+    print('-----------')
+    print(' '+board[1]+' | '+board[2]+' | '+board[3])
 
 #%%
 # Step 2: Function to ask players for marker (X or O)
 
-def player_input():
+def marker_choice():
     '''
     OUTPUT = (player1_marker, player2_marker)
     '''
@@ -34,14 +37,6 @@ def player_input():
     
     else:
         return ('O','X')
-        
-    
-#%% test
-
-#(player1_marker, player2_marker) = player_input()
-#player1_marker
-#player2_marker
-# for dict instead of tuple return: return tuple(player_input().values())
 
 #%%
 # Step 3: Function to position marker on board
@@ -64,8 +59,7 @@ def win_check(board,marker):
         
         #alternative:
         #str = ''
-        #str.join(board[4,5,6]) == marker*3
-        #str.join(board[7,8,9]) == marker*3
+        #str.join(board[1,2,3]) == marker*3
 
 #%%
 # Step 5: Function to pick player that starts
@@ -94,16 +88,23 @@ def full_board_check(board):
         if space_check(board,i):
             return False
     return True
-        
+
 #%%
 # Step 8: Ask for position input and check if position is free
 
-def player_choice(board):
+def position_choice(board):
     
     position = 0
     
     while position not in list(range(1,10)) or not space_check(board, position):
-        position = int(input('Choose your next position (1-9): ')) 
+        try:
+            position = int(input('Choose your next position (1-9): ')) 
+        #By converting str input into int, letter input will throw error, therefore exception necessary
+        except:
+            continue
+        finally: 
+            if full_board_check(board):
+                break
         
     return position
 
@@ -112,9 +113,10 @@ def player_choice(board):
 
 def replay():
     
-    choice = input('Do you want to play again? [yes/no]').lower().startswith('y')
+    replay_choice = input('Do you want to play again? [yes/no] ').lower()[0]
 
-    return choice == 'y'
+    return replay_choice == 'y'
+
 
 #%%
 # Step 10: Put functions together to run the game 
@@ -126,19 +128,20 @@ def play_TicTacToe():
     while True:
 
         # SET UP GAME
-        empty_board = ['']*10
+        empty_board = [' ']*10
         
-        (player1_marker, player2_marker) = player_input()
+        (player1_marker, player2_marker) = marker_choice()
 
         turn = choose_first()
         print(f'{turn} begins! ')
 
-        play_game = input('Ready to play? [y/n] ')
+        play_game = input('Ready to play? [yes/no] ').lower()[0]
 
         if play_game == 'y':
             game_on = True
         else:
             game_on = False
+            break
          
          ## GAME PLAY
         while game_on == True:
@@ -146,7 +149,9 @@ def play_TicTacToe():
             if turn == 'Player 1':
                 display_board(empty_board)
                 
-                position = player_choice(empty_board)
+                print(f'\nPlayer 1 ({player1_marker})')
+                
+                position = position_choice(empty_board)
 
                 place_marker(empty_board, player1_marker, position)
 
@@ -168,7 +173,9 @@ def play_TicTacToe():
             else:
                 display_board(empty_board)
                 
-                position = player_choice(empty_board)
+                print(f'\nPlayer 2 ({player2_marker})')
+                
+                position = position_choice(empty_board)
 
                 place_marker(empty_board, player2_marker, position)
 
@@ -187,11 +194,13 @@ def play_TicTacToe():
                         turn = 'Player 1'
 
         if replay():
-            clear_board = '\n*100'
-            clear_board
             game_on = True
         else:            
             break
 
 #%%
 play_TicTacToe()
+
+
+
+
